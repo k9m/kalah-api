@@ -9,7 +9,7 @@ servers:
 paths:
 
   /games/{gameId}/pits/{pitId}:
-    get:
+    put:
       summary: Show current balance for an account
       operationId: currentBalance
       parameters:
@@ -59,6 +59,20 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /test/reset:
+    post:
+      summary: Removes all games
+      operationId: removeGames
+      responses:
+        '201':
+          description: Games Removed
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 
 
 components:
@@ -77,13 +91,7 @@ components:
         status:
           type: object
           additionalProperties:
-            type: integer
-            format: int32
-
-        timestamp:
-          type: string
-          format: date-time
-
+            type: string
 
     CreateGameResponse:
       type: object

@@ -2,8 +2,10 @@ package org.k9m.kalah.it.steps;
 
 import lombok.Getter;
 import org.k9m.kalah.api.model.CreateGameResponse;
+import org.k9m.kalah.api.model.GameStatus;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,14 +36,13 @@ public class TestClient {
     public CreateGameResponse createGame(){
         return restTemplate.postForObject(baseUrl + "/games", null, CreateGameResponse.class);
     }
-//
-//    public TransactionResponse execute(final Long accountNumber, Transaction.TypeEnum type, final double amount){
-//        final Transaction transaction = new Transaction();
-//        transaction.setAmount(amount);
-//        transaction.setType(type);
-//        transaction.setTimestamp(OffsetDateTime.now());
-//
-//        return restTemplate.postForObject(baseUrl + "/accounts/"+ accountNumber + "/transaction", transaction, TransactionResponse.class);
-//    }
+
+    public void resetGames(){
+        restTemplate.postForLocation(baseUrl + "/test/reset", null);
+    }
+
+    public GameStatus executeMove(String gameId, Integer pitId){
+        return restTemplate.exchange(baseUrl + "/games/" + gameId + "/pits/" + pitId, HttpMethod.PUT, null, GameStatus.class).getBody();
+    }
 
 }

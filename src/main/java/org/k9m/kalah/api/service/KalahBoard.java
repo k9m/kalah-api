@@ -1,12 +1,27 @@
-package org.k9m.kalah.model;
+package org.k9m.kalah.api.service;
 
 import lombok.ToString;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @ToString(onlyExplicitlyIncluded = true)
 public class KalahBoard {
+
+    public enum Player{
+        ONE(KALAH_1),
+        TWO(KALAH_2);
+
+        private int ownKalah;
+
+        Player(int ownKalah) {
+            this.ownKalah = ownKalah;
+        }
+
+        public int getOwnKalah() {
+            return ownKalah;
+        }
+    }
 
     public static final int NR_PITS = 6;
     public static final int NR_STARTING_STONES = 6;
@@ -51,7 +66,7 @@ public class KalahBoard {
     }
 
     public Map<String, String> getStatus(){
-        final Map<String, String> status = new HashMap<>();
+        final Map<String, String> status = new LinkedHashMap<>();
 
         int index = 1;
         for(int stones : board){
@@ -77,7 +92,19 @@ public class KalahBoard {
         }
 
         return isPlayerOneEmpty || isPlayerTwoEmpty;
+    }
 
+    public boolean isPlayerAllowed(final Player player, final int pitNumber){
+        if(player == Player.ONE){
+            return pitNumber < NR_PITS;
+        }
+        else{
+            return KALAH_1 < pitNumber && pitNumber < KALAH_2;
+        }
+    }
+
+    public Player playerFromPitNumber(final int pitNumber){
+        return pitNumber < KALAH_1 ? Player.ONE : Player.TWO;
     }
 
 

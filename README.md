@@ -1,12 +1,13 @@
 # Bank Account Manager
 
-Java 8 / Spring Boot microservice which will allow a user to administer a customer’s bank account.
+Java 8 / Spring Boot REST API that runs a game of 6-stone Kalah. The general rules of the game are explained on Wikipedia: https://en.wikipedia.org/wiki/Kalah and also below in this document. 
 
-- ~~request the current balance~~
-- ~~capture a withdrawal~~
-- ~~capture a deposit~~
-- debit/credit interest amount
+###
 
+
+### Future Work
+- Implementing capture opponent's stones game style
+- Using persistence mechanism to keep states of games
 ---
 
 ### Project outline

@@ -1,4 +1,4 @@
-package org.k9m.kalah.model;
+package org.k9m.kalah.api.service;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -63,5 +63,17 @@ public class KalahBoardTest {
     public void testGameOver(){
         //TODO
         boolean isGameOver = kalahBoard.isGameOver();
+    }
+
+    @Test
+    public void isPlayerAllowed() {
+        assertThat("Player One can't access her own Kalah", kalahBoard.isPlayerAllowed(KalahBoard.Player.ONE, 7), is(false));
+        assertThat("Player Two can't access her own Kalah", kalahBoard.isPlayerAllowed(KalahBoard.Player.TWO, 14), is(false));
+
+        assertThat("Player One can't access Plater Two's Kalah", kalahBoard.isPlayerAllowed(KalahBoard.Player.ONE, 8), is(false));
+        assertThat("Player One can't access Plater Two's Kalah", kalahBoard.isPlayerAllowed(KalahBoard.Player.ONE, 13), is(false));
+
+        assertThat("Player TWO can't access Plater One's Kalah", kalahBoard.isPlayerAllowed(KalahBoard.Player.TWO, 1), is(false));
+        assertThat("Player TWO can't access Plater One's Kalah", kalahBoard.isPlayerAllowed(KalahBoard.Player.TWO, 6), is(false));
     }
 }
