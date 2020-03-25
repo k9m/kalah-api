@@ -1,0 +1,105 @@
+openapi: "3.0.2"
+info:
+  version: 1.0.0
+  title: Kalah Game Board
+  license:
+    name: GNU
+servers:
+  - url: http://localhost:8080
+paths:
+
+  /games/{gameId}/pits/{pitId}:
+    get:
+      summary: Show current balance for an account
+      operationId: currentBalance
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          description: ID of the game
+          schema:
+            type: string
+        - name: pitId
+          in: path
+          required: true
+          description: Pit number to make the move with
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Current Status of the game after the move
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameStatus"
+        404:
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
+  /games:
+    post:
+      summary: Create a new Game
+      operationId: createGame
+      responses:
+        '201':
+          description: Created Game Details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateGameResponse"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
+
+components:
+  schemas:
+
+    GameStatus:
+      type: object
+      required:
+        - amount
+        - type
+      properties:
+        id:
+          type: string
+        link:
+          type: string
+        status:
+          type: object
+          additionalProperties:
+            type: string
+
+        timestamp:
+          type: string
+          format: date-time
+
+
+    CreateGameResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        link:
+          type: string
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
