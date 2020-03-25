@@ -55,7 +55,6 @@ public class KalahBoardTest {
         assertThat("Pit 8 should have 7 stones", kalahBoard.nrStonesInPit(8), is(7));
         assertThat("Pit 13 should have 7 stones", kalahBoard.nrStonesInPit(13), is(7));
         assertThat("There shouldn't be one more round", isOneMoreRound, is(false));
-
     }
 
     @Test
@@ -68,6 +67,43 @@ public class KalahBoardTest {
         assertThat("Pit 1 should have 7 stone", kalahBoard.nrStonesInPit(1), is(7));
         assertThat("Pit 5 should have 6 stones", kalahBoard.nrStonesInPit(5), is(6));
         assertThat("There shouldn't be one more round", isAnotherRound, is(false));
+
+    }
+
+
+    @Test
+    public void executeMoveSkipOtherKala() {
+        kalahBoard.executeMove(1);
+
+        assertThat("Pit 1 should be empty", kalahBoard.isPitEmpty(1), is(true));
+        assertThat("Pit 2 should have 7 stones", kalahBoard.nrStonesInPit(2), is(7));
+        assertThat("Pit 6 should have 7 stones", kalahBoard.nrStonesInPit(6), is(7));
+        assertThat("Pit 7 should have 1 stone", kalahBoard.nrStonesInPit(7), is(1));
+
+        kalahBoard.executeMove(6);
+
+        assertThat("Pit 6 should be empty", kalahBoard.isPitEmpty(6), is(true));
+        assertThat("Pit 7 should have 2 stones", kalahBoard.nrStonesInPit(7), is(2));
+        assertThat("Pit 8 should have 7 stones", kalahBoard.nrStonesInPit(8), is(7));
+        assertThat("Pit 13 should have 7 stones", kalahBoard.nrStonesInPit(13), is(7));
+
+        kalahBoard.executeMove(13);
+
+        assertThat("Pit 13 should be empty", kalahBoard.isPitEmpty(13), is(true));
+        assertThat("Pit 14 should have 1 stones", kalahBoard.nrStonesInPit(14), is(1));
+        assertThat("Pit 1 should have 1 stone", kalahBoard.nrStonesInPit(1), is(1));
+        assertThat("Pit 2 should have 8 stones", kalahBoard.nrStonesInPit(2), is(8));
+        assertThat("Pit 5 should have 8 stones", kalahBoard.nrStonesInPit(5), is(8));
+        assertThat("Pit 6 should have 1 stones", kalahBoard.nrStonesInPit(6), is(1));
+
+        kalahBoard.executeMove(2);
+
+        assertThat("Pit 2 should be empty", kalahBoard.isPitEmpty(2), is(true));
+        assertThat("Pit 3 should have 9 stones", kalahBoard.nrStonesInPit(3), is(9));
+        assertThat("Pit 5 should have 9 stone", kalahBoard.nrStonesInPit(5), is(9));
+        assertThat("Pit 6 should have 2 stones", kalahBoard.nrStonesInPit(6), is(2));
+        assertThat("Pit 7 should have 3 stones", kalahBoard.nrStonesInPit(7), is(3));
+        assertThat("Pit 10 should have 8 stones", kalahBoard.nrStonesInPit(10), is(8));
 
     }
 

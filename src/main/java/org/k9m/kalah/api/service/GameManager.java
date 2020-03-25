@@ -1,6 +1,7 @@
 package org.k9m.kalah.api.service;
 
 import lombok.Data;
+import org.k9m.kalah.api.exception.InvalidPitExceptionException;
 import org.k9m.kalah.api.exception.NoStonesInPitException;
 
 import java.util.Map;
@@ -19,6 +20,9 @@ class GameManager {
         final Player requestPlayer = board.playerFromPitNumber(pitNumber);
 
         if(playerTurn == null || requestPlayer == playerTurn){
+            if(board.isPitAKalah(pitNumber)){
+                throw new InvalidPitExceptionException("This pit[" + pitNumber + "] is a Kalah, cannot make a move from here");
+            }
             if(board.isPitEmpty(pitNumber)){
                 throw new NoStonesInPitException("There aren't any stones in pit: " + pitNumber);
             }

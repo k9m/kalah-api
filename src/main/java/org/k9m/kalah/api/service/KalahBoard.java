@@ -9,25 +9,23 @@ import java.util.Map;
 public class KalahBoard {
 
     public enum Player{
-        ONE(KALAH_1),
-        TWO(KALAH_2);
+        ONE(KALAH_1, KALAH_2),
+        TWO(KALAH_2, KALAH_1);
 
         private int ownKalah;
+        private int otherKalah;
 
-        Player(int ownKalah) {
+        Player(int ownKalah, int otherKalah) {
             this.ownKalah = ownKalah;
-        }
-
-        public int getOwnKalah() {
-            return ownKalah;
+            this.otherKalah = otherKalah;
         }
     }
 
     public static final int NR_PITS = 6;
     public static final int NR_STARTING_STONES = 6;
 
-    public static final int KALAH_1 = NR_PITS + 1;
-    public static final int KALAH_2 = 2 * NR_PITS + 2;
+    private static final int KALAH_1 = NR_PITS + 1;
+    private static final int KALAH_2 = 2 * NR_PITS + 2;
 
     @ToString.Include
     private final int[] board = new int[2 * NR_PITS + 2];
@@ -43,12 +41,17 @@ public class KalahBoard {
         return board[pitNumber - 1] == 0;
     }
 
+    public boolean isPitAKalah(final int pitNumber) {
+        return pitNumber == KALAH_1 || pitNumber == KALAH_2;
+    }
+
     public int nrStonesInPit(final int pitNumber) {
         return board[pitNumber - 1];
     }
 
     public boolean executeMove(final int pitNumber) {
         final int pitIndex = pitNumber - 1;
+        final Player player = this.playerFromPitNumber(pitNumber);
         int stonesInPit = board[pitIndex];
         board[pitIndex] = 0;
 
@@ -58,18 +61,15 @@ public class KalahBoard {
                 nextPitIndex = 0;
             }
 
-            stonesInPit--;
-            board[nextPitIndex++]++;
+            if(nextPitIndex != player.otherKalah - 1){
+                stonesInPit--;
+                board[nextPitIndex]++;
+            }
+
+            nextPitIndex++;
         }
 
-        boolean isAnotherMove;
-        if (pitNumber < KALAH_1) {
-            isAnotherMove = nextPitIndex == KALAH_1;
-        } else {
-            isAnotherMove = nextPitIndex == KALAH_2;
-        }
-
-        return isAnotherMove;
+        return nextPitIndex == player.ownKalah;
     }
 
     public Map<String, String> getStatus(){
