@@ -1,5 +1,7 @@
 package org.k9m.kalah.it.steps;
 
+import lombok.Getter;
+import org.k9m.kalah.api.model.CreateGameResponse;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,7 @@ import static io.cucumber.spring.CucumberTestContext.SCOPE_CUCUMBER_GLUE;
 public class TestClient {
 
     @LocalServerPort
+    @Getter
     private int serverPort;
 
     private RestTemplate restTemplate = new RestTemplate();
@@ -28,9 +31,9 @@ public class TestClient {
         return restTemplate.getForObject(baseUrl + "/actuator/health", String.class);
     }
 
-//    public CurrentBalance balanceCheck(final Long accountNumber){
-//        return restTemplate.getForObject(baseUrl + "/accounts/"+ accountNumber + "/balance", CurrentBalance.class);
-//    }
+    public CreateGameResponse createGame(){
+        return restTemplate.postForObject(baseUrl + "/games", null, CreateGameResponse.class);
+    }
 //
 //    public TransactionResponse execute(final Long accountNumber, Transaction.TypeEnum type, final double amount){
 //        final Transaction transaction = new Transaction();
