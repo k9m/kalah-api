@@ -22,7 +22,7 @@ public class GameController implements GamesApi{
     }
 
     @Override
-    public ResponseEntity<GameStatus> currentBalance(final String gameId, final Integer pitId) {
+    public ResponseEntity<GameStatus> executeMove(final String gameId, final Integer pitId) {
         return ResponseEntity.ok(gameService.executeMove(gameId, pitId));
     }
 }

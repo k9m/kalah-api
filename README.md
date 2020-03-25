@@ -2,7 +2,6 @@
 
 Java 8 / Spring Boot REST API that runs a game of 6-stone Kalah. The general rules of the game are explained on Wikipedia: https://en.wikipedia.org/wiki/Kalah and also below in this document. 
 
-###
 
 ### TODO's
 - Capturing seeds in opposite pit
@@ -23,7 +22,7 @@ Java 8 / Spring Boot REST API that runs a game of 6-stone Kalah. The general rul
 - The API interface and models are generated
 - Swagger UI is accessible from `http://localhost:8080/swagger-ui.html`
 - jacoco coverage reports can be found at `build/jacoco-reports`
-- Integration tests use the Cucumber framework
+- Integration tests use the Cucumber framework, feature files are in `src/test/resources`
 
 
 ### Startup guide

@@ -10,8 +10,8 @@ paths:
 
   /games/{gameId}/pits/{pitId}:
     put:
-      summary: Show current balance for an account
-      operationId: currentBalance
+      summary: Executes a move by a player
+      operationId: executeMove
       parameters:
         - name: gameId
           in: path
@@ -33,12 +33,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GameStatus"
+        400:
+          description: Errors made by players
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorObject"
         404:
           description: Game not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorObject"
 
 
   /games:
@@ -57,7 +63,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorObject"
 
   /test/reset:
     post:
@@ -71,7 +77,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorObject"
 
 
 
@@ -101,13 +107,13 @@ components:
         link:
           type: string
 
-    Error:
+    ErrorObject:
       type: object
       required:
         - code
         - message
       properties:
-        code:
+        statusCode:
           type: integer
           format: int32
         message:

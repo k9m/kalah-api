@@ -1,5 +1,6 @@
 package org.k9m.kalah.config.exception;
 
+import org.k9m.kalah.api.model.ErrorObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
        final ApplicationException applicationException = (ApplicationException)ex;
 
-        return new ResponseEntity<>(new ErrorObject(applicationException), new HttpHeaders(), applicationException.getStatusCode());
+        return new ResponseEntity<>(applicationException.toError(), new HttpHeaders(), applicationException.getStatusCode());
     }
 
     @Override
@@ -32,6 +33,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
         }
 
-        return new ResponseEntity<>(new ErrorObject(ex.getMessage(), status), headers, status);
+        return new ResponseEntity<>(
+                new ErrorObject()
+                        .statusCode(status.value())
+                        .message(ex.getMessage()),
+                headers,
+                status);
     }
 }

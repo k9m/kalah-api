@@ -8,8 +8,8 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import org.k9m.kalah.api.model.CreateGameResponse;
+import org.k9m.kalah.api.model.ErrorObject;
 import org.k9m.kalah.api.model.GameStatus;
-import org.k9m.kalah.config.exception.ErrorObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.HttpClientErrorException;
@@ -91,7 +91,7 @@ public class Steps {
         final ErrorObject errorObject = objectMapper.readValue(lastThrownException.getResponseBodyAsString(), ErrorObject.class);
 
         assertThat(errorObject.getMessage(), is(message));
-        assertThat(errorObject.getStatusCode().value(), is(statusCode));
+        assertThat(errorObject.getStatusCode(), is(statusCode));
     }
 
 
