@@ -1,22 +1,29 @@
-package org.k9m.kalah.api.service;
+package org.k9m.kalah.api.service.board;
 
-import lombok.Data;
+import lombok.Getter;
 import org.k9m.kalah.api.exception.InvalidPitExceptionException;
 import org.k9m.kalah.api.exception.NoStonesInPitException;
 
 import java.util.Map;
 
-import static org.k9m.kalah.api.service.KalahBoard.Player;
+import static org.k9m.kalah.api.service.board.KalahBoard.Player;
 
-@Data
-class GameManager {
 
+public class Game {
+
+    @Getter
     private final String gameId;
     private final KalahBoard board;
+    private Player playerTurn;
 
-    private Player playerTurn = null;
+    public Game(final String gameId){
+        this.gameId = gameId;
+        board = new KalahBoard();
+        playerTurn = null;
+    }
 
-    Map<String, String> executeMove(final Integer pitNumber){
+
+    public Map<String, String> executeMove(final Integer pitNumber){
         final Player requestPlayer = board.playerFromPitNumber(pitNumber);
 
         if(playerTurn == null || requestPlayer == playerTurn){

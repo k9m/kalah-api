@@ -1,4 +1,4 @@
-package org.k9m.kalah.api.service;
+package org.k9m.kalah.api.service.board;
 
 import lombok.ToString;
 
@@ -30,26 +30,26 @@ public class KalahBoard {
     @ToString.Include
     private final int[] board = new int[2 * NR_PITS + 2];
 
-    public KalahBoard() {
+    KalahBoard() {
         for (int i = 0; i < NR_PITS; i++) {
             board[i] = NR_STARTING_STONES;
             board[i + NR_PITS + 1] = NR_STARTING_STONES;
         }
     }
 
-    public boolean isPitEmpty(final int pitNumber) {
+    boolean isPitEmpty(final int pitNumber) {
         return board[pitNumber - 1] == 0;
     }
 
-    public boolean isPitAKalah(final int pitNumber) {
+    boolean isPitAKalah(final int pitNumber) {
         return pitNumber == KALAH_1 || pitNumber == KALAH_2;
     }
 
-    public int nrStonesInPit(final int pitNumber) {
+    int nrStonesInPit(final int pitNumber) {
         return board[pitNumber - 1];
     }
 
-    public boolean executeMove(final int pitNumber) {
+    boolean executeMove(final int pitNumber) {
         final int pitIndex = pitNumber - 1;
         final Player player = this.playerFromPitNumber(pitNumber);
         int stonesInPit = board[pitIndex];
@@ -69,10 +69,25 @@ public class KalahBoard {
             nextPitIndex++;
         }
 
-        return nextPitIndex == player.ownKalah;
+        if(nextPitIndex == player.ownKalah){
+            return true;
+        }
+        else{
+            this.captureStonesFromOppositePitIfPitEmpty(player, nextPitIndex - 1);
+            return false;
+        }
     }
 
-    public Map<String, String> getStatus(){
+    private void captureStonesFromOppositePitIfPitEmpty(final Player player, final int pitIndex){
+        if(board[pitIndex] == 1) {
+            final int oppositeIndex = board.length - pitIndex - 2;
+            board[player.ownKalah - 1] += 1 + board[oppositeIndex];
+            board[pitIndex] = 0;
+            board[oppositeIndex] = 0;
+        }
+    }
+
+    Map<String, String> getStatus(){
         final Map<String, String> status = new LinkedHashMap<>();
 
         int index = 1;
@@ -84,7 +99,7 @@ public class KalahBoard {
     }
 
 
-    public boolean isGameOver() {
+    boolean isGameOver() {
         boolean isPlayerOneEmpty = true;
         boolean isPlayerTwoEmpty = true;
         for (int i = 0; i < board.length; i++) {
@@ -101,7 +116,7 @@ public class KalahBoard {
         return isPlayerOneEmpty || isPlayerTwoEmpty;
     }
 
-    public boolean isPlayerAllowed(final Player player, final int pitNumber){
+    boolean isPlayerAllowed(final Player player, final int pitNumber){
         if(player == Player.ONE){
             return pitNumber < NR_PITS;
         }

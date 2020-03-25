@@ -4,7 +4,9 @@ Java 8 / Spring Boot REST API that runs a game of 6-stone Kalah. The general rul
 
 
 ### TODO's
-- Capturing seeds in opposite pit
+- Implementing and testing Game Over
+- Implementing and testing winner once game over
+- Implementing and testing varoius pit/stone configurations
 
 ### Future Work
 - Using persistence mechanism to keep states of games
