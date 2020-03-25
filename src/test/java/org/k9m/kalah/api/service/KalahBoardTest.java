@@ -48,6 +48,27 @@ public class KalahBoardTest {
         assertThat("Pit 7 should have 1 stone", kalahBoard.nrStonesInPit(7), is(1));
         assertThat("There should be one more round", isAnotherRound, is(true));
 
+        boolean isOneMoreRound = kalahBoard.executeMove(6);
+
+        assertThat("Pit 6 should be empty", kalahBoard.isPitEmpty(6), is(true));
+        assertThat("Pit 7 should have 2 stones", kalahBoard.nrStonesInPit(7), is(2));
+        assertThat("Pit 8 should have 7 stones", kalahBoard.nrStonesInPit(8), is(7));
+        assertThat("Pit 13 should have 7 stones", kalahBoard.nrStonesInPit(13), is(7));
+        assertThat("There shouldn't be one more round", isOneMoreRound, is(false));
+
+    }
+
+    @Test
+    public void executeMoveOverlap() {
+        boolean isAnotherRound = kalahBoard.executeMove(12);
+
+        assertThat("Pit 12 should be empty", kalahBoard.isPitEmpty(12), is(true));
+        assertThat("Pit 13 should have 7 stones", kalahBoard.nrStonesInPit(13), is(7));
+        assertThat("Pit 14 should have 1 stone", kalahBoard.nrStonesInPit(14), is(1));
+        assertThat("Pit 1 should have 7 stone", kalahBoard.nrStonesInPit(1), is(7));
+        assertThat("Pit 5 should have 6 stones", kalahBoard.nrStonesInPit(5), is(6));
+        assertThat("There shouldn't be one more round", isAnotherRound, is(false));
+
     }
 
     @Test

@@ -48,18 +48,25 @@ public class KalahBoard {
     }
 
     public boolean executeMove(final int pitNumber) {
-        final int stonesInPit = board[pitNumber - 1];
-        board[pitNumber - 1] = 0;
+        final int pitIndex = pitNumber - 1;
+        int stonesInPit = board[pitIndex];
+        board[pitIndex] = 0;
 
-        final boolean isAnotherMove;
-        if (pitNumber < KALAH_1) {
-            isAnotherMove = pitNumber + stonesInPit == KALAH_1;
-        } else {
-            isAnotherMove = pitNumber + stonesInPit == KALAH_2;
+        int nextPitIndex = pitNumber;
+        while (stonesInPit > 0) {
+            if (nextPitIndex > KALAH_2 - 1) {
+                nextPitIndex = 0;
+            }
+
+            stonesInPit--;
+            board[nextPitIndex++]++;
         }
 
-        for (int i = 0; i < stonesInPit; i++) {
-            board[pitNumber + i] = ++board[pitNumber + i];
+        boolean isAnotherMove;
+        if (pitNumber < KALAH_1) {
+            isAnotherMove = nextPitIndex == KALAH_1;
+        } else {
+            isAnotherMove = nextPitIndex == KALAH_2;
         }
 
         return isAnotherMove;
