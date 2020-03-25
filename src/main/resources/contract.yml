@@ -77,7 +77,8 @@ components:
         status:
           type: object
           additionalProperties:
-            type: string
+            type: integer
+            format: int32
 
         timestamp:
           type: string
