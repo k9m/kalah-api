@@ -65,22 +65,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorObject"
 
-  /test/reset:
-    post:
-      summary: Removes all games
-      operationId: removeGames
-      responses:
-        '201':
-          description: Games Removed
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorObject"
-
-
-
 components:
   schemas:
 

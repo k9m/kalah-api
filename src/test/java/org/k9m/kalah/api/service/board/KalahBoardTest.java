@@ -6,8 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Map;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -143,19 +141,13 @@ public class KalahBoardTest {
 
     }
 
-    @Test
-    public void getStatus() {
-        boolean isAnotherRound = kalahBoard.executeMove(1);
-        Map<String, String> status = kalahBoard.getStatus();
-
-        assertThat("Pit 1 should be empty", status.get("1"), is("0"));
-        assertThat("Pit 2 should have", status.get("2"), is("7"));
-    }
 
     @Test
     public void testGameOver(){
-        //TODO
-        boolean isGameOver = kalahBoard.isGameOver();
+        assertThat(new KalahBoard(new int[]{1,0,0,0,0,0,36,1,0,0,0,0,0,36}).status(), is(KalahBoard.Status.ACTIVE));
+        assertThat(new KalahBoard(new int[]{0,0,0,0,0,0,36,6,6,6,6,6,6,0}).status(), is(KalahBoard.Status.PLAYER_ONE_WON));
+        assertThat(new KalahBoard(new int[]{6,6,6,6,6,6,0,0,0,0,0,0,0,36}).status(), is(KalahBoard.Status.PLAYER_TWO_WON));
+        assertThat(new KalahBoard(new int[]{0,0,0,0,0,0,36,0,0,0,0,0,0,36}).status(), is(KalahBoard.Status.DRAW));
     }
 
     @Test

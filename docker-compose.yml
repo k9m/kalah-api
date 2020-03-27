@@ -5,3 +5,8 @@ services:
     build: .
     ports:
       - "8080:8080"
+
+  mongodb:
+    image: bitnami/mongodb:latest
+    ports:
+      - "27017"

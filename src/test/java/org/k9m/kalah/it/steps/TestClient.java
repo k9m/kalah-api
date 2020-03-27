@@ -37,10 +37,6 @@ public class TestClient {
         return restTemplate.postForObject(baseUrl + "/games", null, CreateGameResponse.class);
     }
 
-    public void resetGames(){
-        restTemplate.postForLocation(baseUrl + "/test/reset", null);
-    }
-
     public GameStatus executeMove(String gameId, Integer pitId){
         return restTemplate.exchange(baseUrl + "/games/" + gameId + "/pits/" + pitId, HttpMethod.PUT, null, GameStatus.class).getBody();
     }

@@ -12,6 +12,8 @@ import org.k9m.kalah.api.model.ErrorObject;
 import org.k9m.kalah.api.model.GameStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
@@ -23,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class Steps {
 
     @Autowired
@@ -30,6 +33,9 @@ public class Steps {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     private CreateGameResponse lastCreatedGame;
     private GameStatus lastStatus;
@@ -43,7 +49,7 @@ public class Steps {
 
     @Given("no games are present")
     public void emptyGames() {
-        testClient.resetGames();
+        mongoTemplate.getCollectionNames().forEach(cn -> mongoTemplate.dropCollection(cn));
     }
 
     @When("a new game is created")

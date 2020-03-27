@@ -1,9 +1,9 @@
 package org.k9m.kalah.api.service.board;
 
+import lombok.Getter;
 import lombok.ToString;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import static org.k9m.kalah.api.service.board.KalahBoard.Status.*;
 
 @ToString(onlyExplicitlyIncluded = true)
 public class KalahBoard {
@@ -21,6 +21,13 @@ public class KalahBoard {
         }
     }
 
+    public enum Status{
+        ACTIVE,
+        PLAYER_ONE_WON,
+        PLAYER_TWO_WON,
+        DRAW
+    }
+
     public static final int NR_PITS = 6;
     public static final int NR_STARTING_STONES = 6;
 
@@ -28,13 +35,19 @@ public class KalahBoard {
     private static final int KALAH_2 = 2 * NR_PITS + 2;
 
     @ToString.Include
-    private final int[] board = new int[2 * NR_PITS + 2];
+    @Getter
+    private final int[] board;
 
     KalahBoard() {
+        board = new int[2 * NR_PITS + 2];
         for (int i = 0; i < NR_PITS; i++) {
             board[i] = NR_STARTING_STONES;
             board[i + NR_PITS + 1] = NR_STARTING_STONES;
         }
+    }
+
+    KalahBoard(final int[] board) {
+        this.board = board;
     }
 
     boolean isPitEmpty(final int pitNumber) {
@@ -87,19 +100,7 @@ public class KalahBoard {
         }
     }
 
-    Map<String, String> getStatus(){
-        final Map<String, String> status = new LinkedHashMap<>();
-
-        int index = 1;
-        for(int stones : board){
-            status.put(String.valueOf(index++), String.valueOf(stones));
-        }
-
-        return status;
-    }
-
-
-    boolean isGameOver() {
+    Status status() {
         boolean isPlayerOneEmpty = true;
         boolean isPlayerTwoEmpty = true;
         for (int i = 0; i < board.length; i++) {
@@ -107,13 +108,19 @@ public class KalahBoard {
                 if (i < NR_PITS) {
                     isPlayerOneEmpty = false;
                 }
-                else if (NR_PITS < i  && i < 2 * NR_PITS) {
+                else if (NR_PITS < i  && i <= 2 * NR_PITS) {
                     isPlayerTwoEmpty = false;
                 }
             }
         }
 
-        return isPlayerOneEmpty || isPlayerTwoEmpty;
+        final Status status;
+        if(!isPlayerOneEmpty && !isPlayerTwoEmpty){ status = ACTIVE; }
+        else if(isPlayerOneEmpty && !isPlayerTwoEmpty){ status = PLAYER_ONE_WON; }
+        else if(!isPlayerOneEmpty && isPlayerTwoEmpty){ status = PLAYER_TWO_WON; }
+        else{ status = DRAW; }
+
+        return status;
     }
 
     boolean isPlayerAllowed(final Player player, final int pitNumber){
