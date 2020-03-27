@@ -75,7 +75,6 @@ openApiGenerate {
 	systemProperties = [
 			modelDocs: "false"
 	]
-	skipValidateSpec = true
 	logToStderr = true
 }
 

@@ -20,7 +20,8 @@ Java 8 / Spring Boot REST API that runs a game of 6-stone Kalah. The general rul
 
 ### Project outline
 
-- The project was built in a contract-first manner, the public API and models are defined in `resources/contract.yml` 
+- The project was built in a contract-first manner, the public API 
+and models are defined in `resources/contract.yml` 
 - The API interface and models are generated
 - Swagger UI is accessible from `http://localhost:8080/swagger-ui.html`
 - jacoco coverage reports can be found at `build/jacoco-reports`
