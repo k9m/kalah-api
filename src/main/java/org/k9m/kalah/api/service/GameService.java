@@ -2,6 +2,7 @@ package org.k9m.kalah.api.service;
 
 import lombok.RequiredArgsConstructor;
 import org.k9m.kalah.api.exception.GameNotFoundException;
+import org.k9m.kalah.api.exception.GameOverException;
 import org.k9m.kalah.api.model.CreateGameResponse;
 import org.k9m.kalah.api.model.GameStatus;
 import org.k9m.kalah.api.service.board.GameManager;
@@ -43,12 +44,16 @@ public class GameService {
 
     public GameStatus executeMove(final String gameId, final Integer pitNumber) {
         final Game game = gameRepository.findById(gameId).orElseThrow(() -> new GameNotFoundException("Game with Id: " + gameId + " not found!"));
+        if(!"ACTIVE".equalsIgnoreCase(game.getGameStatus())){
+            throw new GameOverException("Game is over, no further moves can be made, status is: " + game.getGameStatus());
+        }
 
         final Game executedGame = gameRepository.save(gameManager.executeMove(game, pitNumber));
 
         return new GameStatus()
                 .id(gameId)
                 .link(hostProperties.getBaseUrl() + "/games/" + gameId)
+                .state(executedGame.getGameStatus())
                 .status(toStatus(executedGame));
 
     }

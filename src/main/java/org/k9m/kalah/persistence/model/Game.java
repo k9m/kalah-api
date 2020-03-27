@@ -11,6 +11,7 @@ public class Game {
     @Id
     private String gameId;
     private String playerTurn;
+    private String gameStatus;
     private BoardStatus boardStatus;
 
 

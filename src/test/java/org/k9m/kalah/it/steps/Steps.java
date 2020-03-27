@@ -82,6 +82,11 @@ public class Steps {
         }
     }
 
+    @Then("^the state of the game should be (.*)$")
+    public void theStateOfTheGameShouldBe(String expectedState) {
+        assertThat(lastStatus.getState(), is(expectedState));
+    }
+
     @Then("the status of the game should be")
     public void theStatusOfTheGameShouldBe(DataTable table) {
         Map<String, String> expectedStatuses = table.asMaps().get(0);

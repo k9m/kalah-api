@@ -12,12 +12,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.k9m.kalah.api.service.board.KalahBoard.Player;
+import static org.k9m.kalah.api.service.board.KalahBoard.Status.ACTIVE;
 
 @Component
 public class GameManager {
 
     public Game createGame(){
         return new Game()
+                .setGameStatus(ACTIVE.toString())
                 .setBoardStatus(new BoardStatus().setPits(boardToPits(new KalahBoard())));
     }
 
@@ -26,7 +28,7 @@ public class GameManager {
         final Player requestPlayer = board.playerFromPitNumber(pitNumber);
 
         Player playerTurn = game.getPlayerTurn() == null ? requestPlayer : Player.valueOf(game.getPlayerTurn());
-        if(playerTurn == null || requestPlayer == playerTurn){
+        if(requestPlayer == playerTurn){
             if(board.isPitAKalah(pitNumber)){
                 throw new InvalidPitExceptionException("This pit[" + pitNumber + "] is a Kalah, cannot make a move from here");
             }
@@ -42,6 +44,7 @@ public class GameManager {
                 return new Game()
                         .setGameId(game.getGameId())
                         .setPlayerTurn(playerTurn.toString())
+                        .setGameStatus(board.status().toString())
                         .setBoardStatus(new BoardStatus().setPits(boardToPits(board)));
             }
         }

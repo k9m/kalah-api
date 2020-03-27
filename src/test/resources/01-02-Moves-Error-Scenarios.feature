@@ -13,6 +13,7 @@ Feature: Creating a new game
     When a new game is created
     Then a response should be returned with a link to the new game
     When making a move from pit 1 from this game
+    Then the state of the game should be ACTIVE
     Then the status of the game should be
       | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 |
       | 0 | 7 | 7 | 7 | 7 | 7 | 1 | 6 | 6 | 6  | 6  | 6  | 6  | 0  |
@@ -24,6 +25,7 @@ Feature: Creating a new game
     When a new game is created
     Then a response should be returned with a link to the new game
     When making a move from pit 2 from this game
+    Then the state of the game should be ACTIVE
     Then the status of the game should be
       | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 |
       | 6 | 0 | 7 | 7 | 7 | 7 | 1 | 7 | 6 | 6  | 6  | 6  | 6  | 0  |

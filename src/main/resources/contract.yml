@@ -78,6 +78,8 @@ components:
           type: string
         link:
           type: string
+        state:
+          type: string
         status:
           type: object
           additionalProperties:
