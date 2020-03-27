@@ -3,6 +3,7 @@ package org.k9m.kalah.api.service.board;
 import lombok.Getter;
 import org.k9m.kalah.api.exception.InvalidPitExceptionException;
 import org.k9m.kalah.api.exception.NoStonesInPitException;
+import org.k9m.kalah.api.exception.WrongPlayerTurnException;
 
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class Game {
             }
         }
         else{
-            throw new NoStonesInPitException("Wrong player's turn, current player is: " + playerTurn);
+            throw new WrongPlayerTurnException("Wrong player's turn, current player is: " + playerTurn);
         }
 
     }
