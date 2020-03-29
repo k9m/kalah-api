@@ -1,19 +1,10 @@
 version: '3.2'
 
 services:
-  kalah-api:
-    build: .
-    environment:
-      KEYCLOAK_SECRET: $KEYCLOAK_SECRET
-    ports:
-      - "8080:8080"
-    depends_on:
-      - keycloak
-
   mongodb:
     image: bitnami/mongodb:latest
     ports:
-      - "27017"
+      - "27017:27017"
 
   mysql:
     image: mysql:8.0
@@ -45,6 +36,6 @@ services:
       KEYCLOAK_USER: $KEYCLOAK_USER
       KEYCLOAK_PASSWORD: $KEYCLOAK_PASSWORD
     ports:
-      - "8081"
+      - "8081:8081"
     depends_on:
       - mysql

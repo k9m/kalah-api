@@ -10,3 +10,9 @@ spring:
       database: kalahApi
       password:
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8081/auth/realms/kalah-api
+          jwk-set-uri: http://keycloak:8081/auth/realms/kalah-api/protocol/openid-connect/certs

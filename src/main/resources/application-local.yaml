@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: kalahApi
+      password:
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/auth/realms/kalah-api
+          jwk-set-uri: http://localhost:8081/auth/realms/kalah-api/protocol/openid-connect/certs
