@@ -28,8 +28,8 @@ and models are defined in `resources/contract.yml`
 
 ### Startup guide
 
-#### Create a `.env` file in the root of the project and populate it with the users and passwords or supply them in the VM as you want:
-
+Create a `.env` file in the root of the project and populate it with the users and passwords or supply them in the VM as you want:
+```
 MYSQL_ROOT_PASSWORD=
 MYSQL_USER=
 MYSQL_PASSWORD=
@@ -38,6 +38,7 @@ KEYCLOAK_DB=
 KEYCLOAK_USER=
 KEYCLOAK_PASSWORD=
 KEYCLOAK_SECRET=
+```
 
 * Please make sure your firewall allows the build to download the embedded mongodb binaries for tests!
 * build the project with gradle `gradle build`
