@@ -5,6 +5,8 @@ services:
     image: bitnami/mongodb:latest
     ports:
       - "27017:27017"
+    volumes:
+      - ./build/volumes/mongodb:/data/db
 
   mysql:
     image: mysql:8.0
@@ -13,6 +15,8 @@ services:
     environment:
       - MYSQL_DATABASE=$KEYCLOAK_DB
     command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - ./build/volumes/mysql:/data/db
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
