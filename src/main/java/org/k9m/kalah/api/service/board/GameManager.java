@@ -25,10 +25,10 @@ public class GameManager {
 
     public Game executeMove(final Game game, final Integer pitNumber){
         final KalahBoard board = new KalahBoard(game.getBoardStatus().getPits().stream().mapToInt(i->i).toArray());
-        final Player requestPlayer = board.playerFromPitNumber(pitNumber);
+        final Player currentPlayer = board.playerFromPitNumber(pitNumber);
 
-        Player playerTurn = game.getPlayerTurn() == null ? requestPlayer : Player.valueOf(game.getPlayerTurn());
-        if(requestPlayer == playerTurn){
+        Player playerTurn = game.getPlayerTurn() == null ? currentPlayer : Player.valueOf(game.getPlayerTurn());
+        if(currentPlayer == playerTurn){
             if(board.isPitAKalah(pitNumber)){
                 throw new InvalidPitExceptionException("This pit[" + pitNumber + "] is a Kalah, cannot make a move from here");
             }
@@ -38,14 +38,16 @@ public class GameManager {
             else{
                 final boolean isAnotherMove = board.executeMove(pitNumber);
                 if(!isAnotherMove){
-                    playerTurn = requestPlayer == Player.ONE ? Player.TWO : Player.ONE;
+                    playerTurn = nextPlayer(currentPlayer);
                 }
 
                 return new Game()
                         .setGameId(game.getGameId())
                         .setPlayerTurn(playerTurn.toString())
                         .setGameStatus(board.status().toString())
-                        .setBoardStatus(new BoardStatus().setPits(boardToPits(board)));
+                        .setBoardStatus(
+                            new BoardStatus()
+                            .setPits(boardToPits(board)));
             }
         }
         else{
@@ -53,10 +55,14 @@ public class GameManager {
         }
     }
 
+
+    private static Player nextPlayer(final Player currentPlayer){
+        return currentPlayer == Player.ONE ? Player.TWO : Player.ONE;
+    }
+
     private static List<Integer> boardToPits(final KalahBoard board){
         return Arrays.stream(board.getBoard()).boxed().collect(Collectors.toList());
     }
-
 
 
 }

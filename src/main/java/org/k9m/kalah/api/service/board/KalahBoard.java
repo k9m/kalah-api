@@ -1,6 +1,5 @@
 package org.k9m.kalah.api.service.board;
 
-import lombok.Getter;
 import lombok.ToString;
 
 import static org.k9m.kalah.api.service.board.KalahBoard.Status.*;
@@ -35,7 +34,6 @@ public class KalahBoard {
     private static final int KALAH_2 = 2 * NR_PITS + 2;
 
     @ToString.Include
-    @Getter
     private final int[] board;
 
     KalahBoard() {
@@ -82,13 +80,16 @@ public class KalahBoard {
             nextPitIndex++;
         }
 
+        final boolean isAnotherMove;
         if(nextPitIndex == player.ownKalah){
-            return true;
+            isAnotherMove = true;
         }
         else{
             this.captureStonesFromOppositePitIfPitEmpty(player, nextPitIndex - 1);
-            return false;
+            isAnotherMove = false;
         }
+
+        return isAnotherMove;
     }
 
     private void captureStonesFromOppositePitIfPitEmpty(final Player player, final int pitIndex){
@@ -134,6 +135,10 @@ public class KalahBoard {
 
     public Player playerFromPitNumber(final int pitNumber){
         return pitNumber < KALAH_1 ? Player.ONE : Player.TWO;
+    }
+
+    public int[] getBoard() {
+        return board;
     }
 
 

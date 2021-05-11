@@ -2,13 +2,10 @@
 
 Java 8 / Spring Boot REST API that runs a gameManager of 6-stone Kalah. The general rules of the gameManager are explained on Wikipedia: https://en.wikipedia.org/wiki/Kalah and also below in this document. 
 
-
-### TODO's
-- Implementing and testing varoius pit/stone configurations
-
 ### Future Work
-- getting status without making a move
-- moves audit trail
+- ~~getting status without making a move~~
+- ~~moves audit trail~~
+- ~~returning the next Player's name~~
 - player hall of fame
 - frontend
 
@@ -20,7 +17,7 @@ Java 8 / Spring Boot REST API that runs a gameManager of 6-stone Kalah. The gene
 and models are defined in `resources/contract.yml` 
 - The API interface and models are generated
 - Swagger UI is accessible from `http://localhost:8080/swagger-ui.html`
-- jacoco coverage reports can be found at `build/jacoco-reports`
+- jacoco coverage reports can be found at `build/jacoco-reports` (Currently doesn't show coverage for the IT tests due to the workaround to get Cucumber working with JUnit5)
 - Integration tests use the Cucumber framework, feature files are in `src/test/resources`
 - Authentication is via Oauth2 using Keycloak as auth server
 - MongodDB is used
@@ -54,6 +51,7 @@ KEYCLOAK_SECRET=
 * password: `password` (This has to be changed at first logon to Keycloak)
 * access token url: `http://localhost:8081/auth/realms/kalah-api/protocol/openid-connect/token`
 
-### Notes
-* I couldn't figure out why it won't work when it's all in one container, so the app needs to be run outside the container AFTER keycloak has started
-
+### Extra work
+- It is now possible to get status without making a move, with the endpoint as per API Docs
+- Audit History of all the moves for a game. It uses MongoDB eventlistener to attach the audit to a save action
+- returning the next Player's name in the status

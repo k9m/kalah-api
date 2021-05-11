@@ -9,18 +9,26 @@ import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import org.k9m.kalah.api.model.CreateGameResponse;
 import org.k9m.kalah.api.model.ErrorObject;
+import org.k9m.kalah.api.model.GameHistoryResponse;
 import org.k9m.kalah.api.model.GameStatus;
 import org.k9m.kalah.it.util.TestClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @Slf4j
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class Steps {
 
     @Autowired
@@ -52,11 +60,10 @@ public class Steps {
         lastCreatedGame = testClient.createGame();
     }
 
-    @Then("a response should be returned with a link to the new game")
+    @Then("a response should be returned with an id generated")
     public void assertCreatedGame() {
         lastCreatedGame = testClient.createGame();
-
-        assertThat(lastCreatedGame.getLink()).isEqualTo(("http://localhost:" + testClient.getServerPort() + "/games/" + lastCreatedGame.getId()));
+        assertThat(lastCreatedGame.getId()).isNotNull();
     }
 
     @When("making a move from pit {int} from this game")
@@ -77,9 +84,17 @@ public class Steps {
         }
     }
 
-    @Then("^the state of the game should be (.*)$")
-    public void theStateOfTheGameShouldBe(String expectedState) {
+    @Then("^the state of the game should be (.*) and player turn (.*)$")
+    public void theStateOfTheGameShouldBe(String expectedState, String playerTurn) {
         assertThat(lastStatus.getState()).isEqualTo(expectedState);
+        assertThat(lastStatus.getPlayerTurn()).isEqualTo(playerTurn);
+    }
+
+
+    @When("^checked via the API, the state of the game should be (.*)$")
+    public void stateViaAPI(String expectedState) {
+        GameStatus status = testClient.getStatus(lastCreatedGame.getId());
+        assertThat(status.getState()).isEqualTo(expectedState);
     }
 
     @Then("the status of the game should be")
@@ -87,7 +102,6 @@ public class Steps {
         Map<String, String> expectedStatuses = table.asMaps().get(0);
 
         assertThat(lastStatus.getId()).isEqualTo(lastCreatedGame.getId());
-        assertThat(lastStatus.getLink()).isEqualTo(lastCreatedGame.getLink());
         assertThat(lastStatus.getStatus()).isEqualTo(expectedStatuses);
     }
 
@@ -101,4 +115,15 @@ public class Steps {
     }
 
 
+    @Then("checking the history for this game should display the following")
+    public void checkingTheHistoryForThisGameShouldDisplayTheFollowing(DataTable table) {
+        GameHistoryResponse historyResponse = testClient.getHistory(lastCreatedGame.getId());
+        AtomicInteger index = new AtomicInteger();
+        table.asMaps().forEach(
+                row -> assertThat(historyResponse
+                    .getHistory()
+                    .get(index.getAndIncrement()).getMoves())
+                    .isEqualTo(new ArrayList(row.values().stream().map(Integer::parseInt).collect(Collectors.toList())))
+        );
+    }
 }

@@ -2,6 +2,7 @@ package org.k9m.kalah.it.util;
 
 import lombok.Getter;
 import org.k9m.kalah.api.model.CreateGameResponse;
+import org.k9m.kalah.api.model.GameHistoryResponse;
 import org.k9m.kalah.api.model.GameStatus;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Scope;
@@ -39,6 +40,14 @@ public class TestClient {
 
     public GameStatus executeMove(String gameId, Integer pitId){
         return restTemplate.exchange(baseUrl + "/games/" + gameId + "/pits/" + pitId, HttpMethod.PUT, null, GameStatus.class).getBody();
+    }
+
+    public GameStatus getStatus(String gameId){
+        return restTemplate.getForObject(baseUrl + "/games/" + gameId + "/status", GameStatus.class);
+    }
+
+    public GameHistoryResponse getHistory(String gameId){
+        return restTemplate.getForObject(baseUrl + "/games/" + gameId + "/history", GameHistoryResponse.class);
     }
 
 }

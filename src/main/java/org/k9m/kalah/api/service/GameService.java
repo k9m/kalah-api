@@ -45,21 +45,26 @@ public class GameService {
         }
 
         final Game executedGame = gameRepository.save(gameManager.executeMove(game, pitNumber));
-
-        return new GameStatus()
-                .id(gameId)
-                .link(hostProperties.getBaseUrl() + "/games/" + gameId)
-                .state(executedGame.getGameStatus())
-                .status(toStatus(executedGame));
+        return toStatus(executedGame);
 
     }
 
-    private static Map<String, String> toStatus(final Game game){
+    public GameStatus getStatus(final String gameId) {
+        final Game game =  gameRepository.findById(gameId).orElseThrow(() -> new GameNotFoundException("Game with Id: " + gameId + " not found!"));
+        return toStatus(game);
+    }
+
+    private GameStatus toStatus(final Game game){
         final Map<String, String> status = new LinkedHashMap<>();
         final AtomicInteger index = new AtomicInteger(1);
         game.getBoardStatus().getPits().forEach(p -> status.put(String.valueOf(index.getAndIncrement()), String.valueOf(p)));
 
-        return status;
+        return new GameStatus()
+            .id(game.getGameId())
+            .state(game.getGameStatus())
+            .link(hostProperties.getBaseUrl() + "/games/" + game.getGameId())
+            .playerTurn(game.getPlayerTurn())
+            .status(status);
     }
 
     public void reset() {
