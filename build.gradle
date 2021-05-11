@@ -1,14 +1,14 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.4.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	id 'org.openapi.generator' version '4.2.2'
+	id 'org.springframework.boot' version '2.4.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'org.openapi.generator' version '5.1.1'
 	id 'java'
 	id 'jacoco'
 }
 
 ext {
-	cucumberVersion = '5.1.0'
-	swaggerVersion = '2.9.2'
+	cucumberVersion = '6.10.3'
+	swaggerVersion = '3.0.0'
 }
 
 apply plugin: 'org.openapi.generator'
@@ -16,7 +16,7 @@ apply plugin: 'jacoco'
 
 group = 'org.k9m.kalah'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 configurations {
 	developmentOnly
@@ -34,6 +34,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
@@ -48,15 +49,13 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
-	testCompile group: "de.flapdoodle.embed", name: "de.flapdoodle.embed.mongo"
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	testImplementation group: "de.flapdoodle.embed", name: "de.flapdoodle.embed.mongo"
 	
 
+	testImplementation group : 'org.junit.platform', name : 'junit-platform-console'
 	testImplementation group : 'io.cucumber', name : 'cucumber-java', version: cucumberVersion
-	testImplementation group : 'io.cucumber', name : 'cucumber-java', version: cucumberVersion
-	testImplementation group : 'io.cucumber', name : 'cucumber-junit', version: cucumberVersion
+	testImplementation group : 'io.cucumber', name : 'cucumber-junit-platform-engine', version: cucumberVersion
 	testImplementation group : 'io.cucumber', name : 'cucumber-spring', version: cucumberVersion
 }
 
@@ -69,32 +68,49 @@ openApiGenerate {
 	configOptions = [
 			dateLibrary: "java8",
 			interfaceOnly: "true",
-			swaggerDocketConfig: "true",
+			swaggerDocketConfig: "false",
 			configPackage: "org.k9m.kalah.api.config",
-			java8: "false"
-	]
-	systemProperties = [
-			modelDocs: "false"
+			java8: "true"
 	]
 	logToStderr = true
 }
 
-test {
-	useJUnit()
-	finalizedBy jacocoTestReport
 
-	jacoco {
-		destinationFile = file("$buildDir/jacoco/jacoco.exec")
-		classDumpDir = file("$buildDir/jacoco/classpathdumps")
+task itTests(type: JavaExec) {
+	dependsOn(testClasses)
+	outputs.dir(file("$buildDir/test-results"))
+	classpath = sourceSets["test"].runtimeClasspath
+	main = "org.junit.platform.console.ConsoleLauncher"
+	args("--scan-classpath")
+	args("--include-engine", "cucumber")
+	args("--reports-dir", file("$buildDir/test-results"))
+
+	finalizedBy jacocoTestReport
+}
+
+test {
+	useJUnitPlatform()
+
+	testLogging {
+		events "passed", "skipped", "failed"
+		showStandardStreams = true
 	}
 
-	jacocoTestReport {
-		reports {
-			xml.enabled true
-			csv.enabled true
-			html.enabled true
-			html.destination file("${buildDir}/jacoco-reports")
-		}
+	finalizedBy itTests
+}
+
+
+jacoco {
+	toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.enabled true
+		csv.enabled true
+		html.enabled true
+		html.destination file("${buildDir}/jacoco-reports")
 	}
 }
 
@@ -102,17 +118,6 @@ sourceSets {
 	main {
 		java {
 			srcDir 'build/generated-sources/src/main/java'
-		}
-	}
-}
-
-springBoot {
-	buildInfo {
-		properties {
-			artifact = project.name
-			version = rootProject.version
-			group = project.group
-			name = project.description
 		}
 	}
 }

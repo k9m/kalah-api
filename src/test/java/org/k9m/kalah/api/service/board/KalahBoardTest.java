@@ -2,9 +2,8 @@ package org.k9m.kalah.api.service.board;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -14,14 +13,9 @@ public class KalahBoardTest {
 
     private KalahBoard kalahBoard;
 
-    @Before
+    @BeforeEach
     public void before(){
         kalahBoard = new KalahBoard();
-        log.info(kalahBoard.toString());
-    }
-
-    @After
-    public void after(){
         log.info(kalahBoard.toString());
     }
 

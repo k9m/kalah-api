@@ -1,4 +1,4 @@
-package org.k9m.kalah.it.steps;
+package org.k9m.kalah.it.util;
 
 import lombok.Getter;
 import org.k9m.kalah.api.model.CreateGameResponse;

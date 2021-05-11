@@ -12,7 +12,6 @@ import org.k9m.kalah.persistence.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,9 +28,6 @@ public class GameService {
 
     @Autowired
     private GameManager gameManager;
-
-
-    private Map<String, GameManager> games = new HashMap<>();
 
     public CreateGameResponse createGame() {
         final Game newGame = gameRepository.save(gameManager.createGame());

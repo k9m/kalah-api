@@ -1,4 +1,4 @@
-package org.k9m.kalah.it.steps;
+package org.k9m.kalah.it;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,22 +10,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.k9m.kalah.api.model.CreateGameResponse;
 import org.k9m.kalah.api.model.ErrorObject;
 import org.k9m.kalah.api.model.GameStatus;
+import org.k9m.kalah.it.util.TestClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 @Slf4j
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
 public class Steps {
 
     @Autowired
@@ -44,7 +39,7 @@ public class Steps {
     @Given("the system has started up")
     public void theSystemHasStartedUp() {
         final String healthCheckString = testClient.healthCheck();
-        assertThat(healthCheckString, containsString("UP"));
+        assertThat(healthCheckString).contains("UP");
     }
 
     @Given("no games are present")
@@ -61,7 +56,7 @@ public class Steps {
     public void assertCreatedGame() {
         lastCreatedGame = testClient.createGame();
 
-        assertThat(lastCreatedGame.getLink(), is("http://localhost:" + testClient.getServerPort() + "/games/" + lastCreatedGame.getId()));
+        assertThat(lastCreatedGame.getLink()).isEqualTo(("http://localhost:" + testClient.getServerPort() + "/games/" + lastCreatedGame.getId()));
     }
 
     @When("making a move from pit {int} from this game")
@@ -84,25 +79,25 @@ public class Steps {
 
     @Then("^the state of the game should be (.*)$")
     public void theStateOfTheGameShouldBe(String expectedState) {
-        assertThat(lastStatus.getState(), is(expectedState));
+        assertThat(lastStatus.getState()).isEqualTo(expectedState);
     }
 
     @Then("the status of the game should be")
     public void theStatusOfTheGameShouldBe(DataTable table) {
         Map<String, String> expectedStatuses = table.asMaps().get(0);
 
-        assertThat(lastStatus.getId(), is(lastCreatedGame.getId()));
-        assertThat(lastStatus.getLink(), is(lastCreatedGame.getLink()));
-        assertThat(lastStatus.getStatus(), is(expectedStatuses));
+        assertThat(lastStatus.getId()).isEqualTo(lastCreatedGame.getId());
+        assertThat(lastStatus.getLink()).isEqualTo(lastCreatedGame.getLink());
+        assertThat(lastStatus.getStatus()).isEqualTo(expectedStatuses);
     }
 
     @Then("^an error should be returned with message: (.*) and status code (\\d+)$")
     public void anErrorShouldBeReturnedWithMessageAndStatusCode(String message, int statusCode) throws JsonProcessingException {
-        assertNotNull("Error shouldn't be null", lastThrownException);
+        assertThat(lastThrownException).isNotNull();
         final ErrorObject errorObject = objectMapper.readValue(lastThrownException.getResponseBodyAsString(), ErrorObject.class);
 
-        assertThat(errorObject.getMessage(), is(message));
-        assertThat(errorObject.getStatusCode(), is(statusCode));
+        assertThat(errorObject.getMessage()).isEqualTo(message);
+        assertThat(errorObject.getStatusCode()).isEqualTo(statusCode);
     }
 
 
