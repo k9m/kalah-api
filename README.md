@@ -1,8 +1,24 @@
 # Mancalah API
 
-Java 8 / Spring Boot REST API that runs a gameManager of 6-stone Kalah. The general rules of the gameManager are explained on Wikipedia: https://en.wikipedia.org/wiki/Kalah and also below in this document. 
+Java 11 / Spring Boot REST API that runs a gameManager of 6-stone Kalah. The general rules of the gameManager are explained on Wikipedia: https://en.wikipedia.org/wiki/Kalah and also below in this document. 
 
-### Future Work
+---
+## Rework 2021
+After looking around in other projects I have concluded that the board/game logic can't be a lot much better looking, so I decided to showcase real life features instead as listed below
+
+#### Technical overhaul
+- Upgraded to latest versions of Spring Boot, Gradle, and using Java 1
+- Tests are now using JUnit5
+- Using AssertJ for more readable tests
+
+#### New Features
+- Returning the next Player's name in the status
+- It is now possible to get status without making a move, with the endpoint as per API Docs
+- Audit History of all the moves for a game. It uses MongoDB eventlistener to attach save audit to the save board action
+
+---
+
+## Future Work
 - ~~getting status without making a move~~
 - ~~moves audit trail~~
 - ~~returning the next Player's name~~
@@ -11,7 +27,7 @@ Java 8 / Spring Boot REST API that runs a gameManager of 6-stone Kalah. The gene
 
 ---
 
-### Project outline
+## Project outline
 
 - The project was built in a contract-first manner, the public API 
 and models are defined in `resources/contract.yml` 
@@ -23,7 +39,7 @@ and models are defined in `resources/contract.yml`
 - MongodDB is used
 
 
-### Startup guide
+## Startup guide
 
 Create a `.env` file in the root of the project and populate it with the users and passwords or supply them in the VM as you want:
 ```
@@ -45,13 +61,8 @@ KEYCLOAK_SECRET=
 * import `src/main/resources/contract.yml` to PostMan
 * Get the Oauth token with below details
 
-### Oauth
+## Oauth
 * Realm: `kalah-api`
 * Client ID: `kalah-player`
 * password: `password` (This has to be changed at first logon to Keycloak)
 * access token url: `http://localhost:8081/auth/realms/kalah-api/protocol/openid-connect/token`
-
-### Extra work
-- It is now possible to get status without making a move, with the endpoint as per API Docs
-- Audit History of all the moves for a game. It uses MongoDB eventlistener to attach the audit to a save action
-- returning the next Player's name in the status

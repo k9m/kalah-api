@@ -48,7 +48,7 @@ paths:
 
   /games/{gameId}/status:
     get:
-      summary: shows the status of a game
+      summary: Shows the status of a game
       operationId: getStatus
       parameters:
         - name: gameId
@@ -73,7 +73,7 @@ paths:
 
   /games/{gameId}/history:
     get:
-      summary: shows the history of moves for a game
+      summary: Shows the history of moves for a game
       operationId: getHistory
       parameters:
         - name: gameId
