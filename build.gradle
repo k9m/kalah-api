@@ -79,6 +79,29 @@ openApiGenerate {
 	logToStderr = true
 }
 
+task openApiGenerateTestClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+	generatorName = "java"
+	library = "resttemplate"
+	inputSpec = "$rootDir/src/main/resources/contract.yml"
+	outputDir = "$buildDir/generated-test-sources"
+	apiPackage = "org.k9m.kalah.api"
+	modelPackage = "org.k9m.kalah.api.model"
+	generateApiTests = false
+	generateModelTests = false
+	supportingFilesConstrainedTo = [""]
+	apiFilesConstrainedTo = [""]
+	configOptions = [
+			dateLibrary: "java8",
+			generateModels: "false",
+			interfaceOnly: "true",
+			exceptionHandler : "false",
+			swaggerDocketConfig: "false",
+			configPackage: "org.k9m.kalah.api.config",
+			java8: "true"
+	]
+}
+
+
 
 task itTests(type: JavaExec) {
 	dependsOn(testClasses)
@@ -124,6 +147,12 @@ sourceSets {
 			srcDir 'build/generated-sources/src/main/java'
 		}
 	}
+
+	test {
+		java {
+			srcDir 'build/generated-test-sources/src/main/java'
+		}
+	}
 }
 
-compileJava.dependsOn tasks.openApiValidate,tasks.openApiGenerate
+compileJava.dependsOn tasks.openApiValidate,tasks.openApiGenerate,tasks.openApiGenerateTestClient

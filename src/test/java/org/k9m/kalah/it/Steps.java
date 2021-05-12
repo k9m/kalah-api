@@ -57,19 +57,19 @@ public class Steps {
 
     @When("a new game is created")
     public void gameCreated() {
-        lastCreatedGame = testClient.createGame();
+        lastCreatedGame = testClient.api().createGame();
     }
 
     @Then("a response should be returned with an id generated")
     public void assertCreatedGame() {
-        lastCreatedGame = testClient.createGame();
+        lastCreatedGame = testClient.api().createGame();
         assertThat(lastCreatedGame.getId()).isNotNull();
     }
 
     @When("making a move from pit {int} from this game")
     public void executeMove(int pitId) {
         try {
-            lastStatus = testClient.executeMove(lastCreatedGame.getId(), pitId);
+            lastStatus = testClient.api().executeMove(lastCreatedGame.getId(), pitId);
         } catch (HttpClientErrorException e) {
             lastThrownException = e;
         }
@@ -78,7 +78,7 @@ public class Steps {
     @When("^trying to make a move for a game with id (.*) that doesn't exist$")
     public void gameDoesntExist(String id) {
         try {
-            lastStatus = testClient.executeMove(id, 1);
+            lastStatus = testClient.api().executeMove(id, 1);
         } catch (HttpClientErrorException e) {
             lastThrownException = e;
         }
@@ -93,7 +93,7 @@ public class Steps {
 
     @When("^checked via the API, the state of the game should be (.*)$")
     public void stateViaAPI(String expectedState) {
-        GameStatus status = testClient.getStatus(lastCreatedGame.getId());
+        GameStatus status = testClient.api().getStatus(lastCreatedGame.getId());
         assertThat(status.getState()).isEqualTo(expectedState);
     }
 
@@ -117,13 +117,14 @@ public class Steps {
 
     @Then("checking the history for this game should display the following")
     public void checkingTheHistoryForThisGameShouldDisplayTheFollowing(DataTable table) {
-        GameHistoryResponse historyResponse = testClient.getHistory(lastCreatedGame.getId());
+        GameHistoryResponse historyResponse = testClient.api().getHistory(lastCreatedGame.getId());
         AtomicInteger index = new AtomicInteger();
         table.asMaps().forEach(
                 row -> assertThat(historyResponse
                     .getHistory()
                     .get(index.getAndIncrement()).getMoves())
-                    .isEqualTo(new ArrayList(row.values().stream().map(Integer::parseInt).collect(Collectors.toList())))
+                    .isEqualTo(new ArrayList(row.values().stream()
+                        .map(Integer::parseInt).collect(Collectors.toList())))
         );
     }
 }

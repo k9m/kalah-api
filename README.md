@@ -10,7 +10,8 @@ Java 11 / Spring Boot REST API that runs a gameManager of 6-stone Kalah. The gen
 - Upgraded to latest versions of Spring Boot (2.4.5), Gradle 6, and using Java 11
 - upgraded to JUnit5
 - Using AssertJ in IT tests
-- Validate spec as part of the build
+- Separate Validate spec step as part of the build
+- Generating API client for the tests
 
 #### New Features
 - Returning the next Player's name in the status
