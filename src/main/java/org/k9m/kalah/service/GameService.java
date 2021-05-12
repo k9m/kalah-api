@@ -1,11 +1,11 @@
-package org.k9m.kalah.api.service;
+package org.k9m.kalah.service;
 
 import lombok.RequiredArgsConstructor;
-import org.k9m.kalah.api.exception.GameNotFoundException;
-import org.k9m.kalah.api.exception.GameOverException;
+import org.k9m.kalah.service.exception.GameNotFoundException;
+import org.k9m.kalah.service.exception.GameOverException;
 import org.k9m.kalah.api.model.CreateGameResponse;
 import org.k9m.kalah.api.model.GameStatus;
-import org.k9m.kalah.api.service.board.GameManager;
+import org.k9m.kalah.service.game.GameFactory;
 import org.k9m.kalah.config.HostProperties;
 import org.k9m.kalah.persistence.model.Game;
 import org.k9m.kalah.persistence.repository.GameRepository;
@@ -20,17 +20,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GameService {
 
-    @Autowired
     private final HostProperties hostProperties;
-
-    @Autowired
     private final GameRepository gameRepository;
 
-    @Autowired
-    private GameManager gameManager;
-
     public CreateGameResponse createGame() {
-        final Game newGame = gameRepository.save(gameManager.createGame());
+        final Game newGame = gameRepository.save(GameFactory.createGame());
 
         final String gameId = newGame.getGameId();
         return new CreateGameResponse()
@@ -44,7 +38,7 @@ public class GameService {
             throw new GameOverException("Game is over, no further moves can be made, status is: " + game.getGameStatus());
         }
 
-        final Game executedGame = gameRepository.save(gameManager.executeMove(game, pitNumber));
+        final Game executedGame = gameRepository.save(GameFactory.executeMove(game, pitNumber));
         return toStatus(executedGame);
 
     }
@@ -65,9 +59,5 @@ public class GameService {
             .link(hostProperties.getBaseUrl() + "/games/" + game.getGameId())
             .playerTurn(game.getPlayerTurn())
             .status(status);
-    }
-
-    public void reset() {
-        gameRepository.deleteAll();
     }
 }

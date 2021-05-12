@@ -59,6 +59,10 @@ dependencies {
 	testImplementation group : 'io.cucumber', name : 'cucumber-spring', version: cucumberVersion
 }
 
+openApiValidate {
+	inputSpec = "$rootDir/src/main/resources/contract.yml".toString()
+}
+
 openApiGenerate {
 	generatorName = "spring"
 	inputSpec = "$rootDir/src/main/resources/contract.yml"
@@ -122,4 +126,4 @@ sourceSets {
 	}
 }
 
-compileJava.dependsOn tasks.openApiGenerate
+compileJava.dependsOn tasks.openApiValidate,tasks.openApiGenerate

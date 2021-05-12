@@ -1,4 +1,4 @@
-package org.k9m.kalah.api.service.board;
+package org.k9m.kalah.service.game;
 
 
 import lombok.extern.slf4j.Slf4j;

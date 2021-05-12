@@ -1,4 +1,4 @@
-package org.k9m.kalah.api.exception;
+package org.k9m.kalah.service.game.exception;
 
 import org.k9m.kalah.config.exception.ApplicationException;
 import org.springframework.http.HttpStatus;

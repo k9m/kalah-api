@@ -3,13 +3,14 @@
 Java 11 / Spring Boot REST API that runs a gameManager of 6-stone Kalah. The general rules of the gameManager are explained on Wikipedia: https://en.wikipedia.org/wiki/Kalah and also below in this document. 
 
 ---
-## Rework 2021
-After looking around in other projects I have concluded that the board/game logic can't be a lot much better looking, so I decided to showcase real life features instead as listed below
+## Improvements 2021
 
 #### Technical overhaul
-- Upgraded to latest versions of Spring Boot, Gradle, and using Java 1
-- Tests are now using JUnit5
-- Using AssertJ for more readable tests
+- Refactoring to improve readability of the application layer
+- Upgraded to latest versions of Spring Boot (2.4.5), Gradle 6, and using Java 11
+- upgraded to JUnit5
+- Using AssertJ in IT tests
+- Validate spec as part of the build
 
 #### New Features
 - Returning the next Player's name in the status

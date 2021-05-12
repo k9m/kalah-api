@@ -1,26 +1,34 @@
-package org.k9m.kalah.api.service.board;
+package org.k9m.kalah.service.game;
 
 import lombok.ToString;
 
-import static org.k9m.kalah.api.service.board.KalahBoard.Status.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.k9m.kalah.service.game.KalahBoard.Status.*;
 
 @ToString(onlyExplicitlyIncluded = true)
-public class KalahBoard {
+class KalahBoard {
 
-    public enum Player{
+    enum Player{
         ONE(KALAH_1, KALAH_2),
         TWO(KALAH_2, KALAH_1);
 
-        private int ownKalah;
-        private int otherKalah;
+        private final int ownKalah;
+        private final int otherKalah;
 
         Player(int ownKalah, int otherKalah) {
             this.ownKalah = ownKalah;
             this.otherKalah = otherKalah;
         }
+
+        public Player nextPlayer(){
+            return this == Player.ONE ? Player.TWO : Player.ONE;
+        }
     }
 
-    public enum Status{
+    enum Status{
         ACTIVE,
         PLAYER_ONE_WON,
         PLAYER_TWO_WON,
@@ -137,8 +145,8 @@ public class KalahBoard {
         return pitNumber < KALAH_1 ? Player.ONE : Player.TWO;
     }
 
-    public int[] getBoard() {
-        return board;
+    public List<Integer> boardToPits(){
+        return Arrays.stream(board).boxed().collect(Collectors.toList());
     }
 
 
