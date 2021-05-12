@@ -2,17 +2,15 @@ package org.k9m.kalah.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.k9m.kalah.service.exception.GameHistoryNotFoundException;
 import org.k9m.kalah.api.model.GameHistoryResponse;
-import org.k9m.kalah.api.model.Pits;
 import org.k9m.kalah.persistence.model.Game;
 import org.k9m.kalah.persistence.model.GameHistory;
 import org.k9m.kalah.persistence.repository.GameHistoryRepository;
+import org.k9m.kalah.service.exception.GameHistoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -20,6 +18,7 @@ import java.util.stream.Collectors;
 public class GameHistoryService {
 
     private final GameHistoryRepository gameHistoryRepository;
+    private final ModelConverter modelConverter;
 
     public void saveGameHistory(final Game game) {
         GameHistory gameHistory = gameHistoryRepository.findFirstByGameId(game.getGameId());
@@ -42,11 +41,7 @@ public class GameHistoryService {
             throw new GameHistoryNotFoundException("GameHistory for Game with gameId: " + gameId + " not found!");
         }
         else{
-            return new GameHistoryResponse()
-                    .gameId(gameId)
-                    .history(gameHistory.getHistory().stream()
-                            .map(gh -> new Pits().moves(gh.getPits()))
-                            .collect(Collectors.toList()));
+            return modelConverter.toGameHistoryResponse(gameId, gameHistory);
         }
     }
 
